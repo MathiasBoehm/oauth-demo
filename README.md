@@ -30,7 +30,7 @@ Result:
 ```
 
 
-# Do Client Call
+# Exttract Token and do Client Call
 ```bash
 $ TOKEN=$(curl trusted-app:secret@localhost:8080/oauth/token -d "grant_type=password&username=user&password=password" | jq '.access_token' | sed 's/"//g') 
 $ curl -H "Authorization: Bearer $TOKEN" localhost:8081/demo
