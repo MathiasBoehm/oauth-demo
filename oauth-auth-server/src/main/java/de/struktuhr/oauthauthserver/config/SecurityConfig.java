@@ -43,55 +43,55 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests().anyRequest().denyAll(); // denying all access
     }
 
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.inMemoryAuthentication() // creating user in memory
-//                    .withUser("user")
-//                    .password("password")
-//                    .roles("USER")
-//                .and()
-//                    .withUser("admin")
-//                    .password("password")
-//                    .authorities("ROLE_ADMIN");
-//    }
-
-
     @Override
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-                .ldapAuthentication()
-                .userSearchFilter(userSearchFilter)
-                .groupSearchFilter(groupSearchFilter)
-                .ldapAuthoritiesPopulator(ldapAuthoritiesPopulator())
-                .contextSource()
-                .url(url)
-                .managerDn(managerDN)
-                .managerPassword(managerPassword);
-
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.inMemoryAuthentication() // creating user in memory
+                    .withUser("user")
+                    .password("password")
+                    .roles("USER")
+                .and()
+                    .withUser("admin")
+                    .password("password")
+                    .authorities("ROLE_ADMIN");
     }
 
-    @Bean
-    public LdapAuthoritiesPopulator ldapAuthoritiesPopulator() {
-        return new LdapAuthoritiesPopulator() {
-            @Override
-            public Collection<? extends GrantedAuthority> getGrantedAuthorities(DirContextOperations dirContextOperations, String s) {
-                final Collection<GrantedAuthority> authorities = new HashSet<>();
 
-                // every authenticated user has Role USER
-                authorities.add(new SimpleGrantedAuthority("USER"));
-
-                // jfryer is admin
-                final String uid = dirContextOperations.getStringAttribute("uid");
-                if ("jfryer".equalsIgnoreCase(uid)) {
-                    authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-                }
-
-                System.out.println(s + " has roles " + authorities);
-
-                return authorities;
-            }
-        };
-    }
+//    @Override
+//    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+//        auth
+//                .ldapAuthentication()
+//                .userSearchFilter(userSearchFilter)
+//                .groupSearchFilter(groupSearchFilter)
+//                .ldapAuthoritiesPopulator(ldapAuthoritiesPopulator())
+//                .contextSource()
+//                .url(url)
+//                .managerDn(managerDN)
+//                .managerPassword(managerPassword);
+//
+//    }
+//
+//    @Bean
+//    public LdapAuthoritiesPopulator ldapAuthoritiesPopulator() {
+//        return new LdapAuthoritiesPopulator() {
+//            @Override
+//            public Collection<? extends GrantedAuthority> getGrantedAuthorities(DirContextOperations dirContextOperations, String s) {
+//                final Collection<GrantedAuthority> authorities = new HashSet<>();
+//
+//                // every authenticated user has Role USER
+//                authorities.add(new SimpleGrantedAuthority("USER"));
+//
+//                // jfryer is admin
+//                final String uid = dirContextOperations.getStringAttribute("uid");
+//                if ("jfryer".equalsIgnoreCase(uid)) {
+//                    authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+//                }
+//
+//                System.out.println(s + " has roles " + authorities);
+//
+//                return authorities;
+//            }
+//        };
+//    }
 
     @Override
     @Bean
